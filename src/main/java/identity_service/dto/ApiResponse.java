@@ -1,4 +1,4 @@
-package identity_service.dto.user;
+package identity_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
