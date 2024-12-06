@@ -1,4 +1,4 @@
-package identity_service.dto.user;
+package identity_service.dto.user.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
