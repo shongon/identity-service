@@ -1,10 +1,15 @@
 package identity_service.service;
 
 import identity_service.dto.user.request.CreateUserRequest;
+import identity_service.dto.user.request.UpdateUserRequest;
+import identity_service.exception.handler.ErrorCode;
+import identity_service.exception.user.UserNotFoundException;
 import identity_service.model.User;
 import identity_service.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,5 +26,30 @@ public class UserService {
         user.setDob(request.getDob());
 
         return userRepository.save(user);
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public User getUserById(String id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public User updateUser(String id, UpdateUserRequest request){
+        User user = getUserById(id);
+
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setDob(request.getDob());
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(String id){
+        userRepository.findById(id).ifPresentOrElse(userRepository::delete,
+                () -> {throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);});
     }
 }
