@@ -1,4 +1,4 @@
-package identity_service.utils.CustomAnnotation;
+package identity_service.utils.CustomAnnotation.MininumAge;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
