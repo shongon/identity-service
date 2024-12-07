@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    INVALID_KEY (400, "Invalid message key"),
     //User
     USER_NOT_FOUND(400,"User not found!"),
     EXISTED_USERNAME(400,"Username already exists!"),
