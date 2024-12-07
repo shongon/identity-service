@@ -1,5 +1,7 @@
 package identity_service.dto.user.request;
 
+import identity_service.utils.CustomAnnotation.MininumAge.MinimumAge;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +16,14 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class UpdateUserRequest {
+
+    @NotNull
     String firstName;
+
+    @NotNull
     String lastName;
+
+    @NotNull
+    @MinimumAge(value = 18, message = "User must be at least 18 years old")
     LocalDate dob;
 }
