@@ -3,6 +3,7 @@ package identity_service.service;
 import identity_service.dto.user.request.CreateUserRequest;
 import identity_service.dto.user.request.UpdateUserRequest;
 import identity_service.exception.handler.ErrorCode;
+import identity_service.exception.user.ExistedUsernameException;
 import identity_service.exception.user.UserNotFoundException;
 import identity_service.model.User;
 import identity_service.repository.UserRepository;
@@ -19,6 +20,9 @@ public class UserService {
     public User createUser (CreateUserRequest request){
         User user = new User();
 
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new ExistedUsernameException(ErrorCode.EXISTED_USERNAME);
+
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
@@ -32,14 +36,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(String id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+    public User getUserByUsername(String username){
+        if (!userRepository.existsByUsername(username))
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
+
+        return userRepository.findByUsername(username);
     }
 
-    public User updateUser(String id, UpdateUserRequest request){
-        User user = getUserById(id);
-
+    public User updateUser(String username, UpdateUserRequest request){
+        User user = getUserByUsername(username);
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -48,8 +53,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(String id){
-        userRepository.findById(id).ifPresentOrElse(userRepository::delete,
-                () -> {throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);});
+    public void deleteUser(String username){
+        if (!userRepository.existsByUsername(username))
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
+        userRepository.deleteByUsername(username);
     }
 }

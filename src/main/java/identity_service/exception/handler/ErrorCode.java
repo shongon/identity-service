@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public enum ErrorCode {
     //User
-    USER_NOT_FOUND(400,"User not found!")
-
+    USER_NOT_FOUND(400,"User not found!"),
+    EXISTED_USERNAME(400,"Username already exists!"),
     ;
 
     private int code;

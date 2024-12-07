@@ -26,19 +26,19 @@ public class UserController {
         return ApiResponse.success(userService.getAllUsers());
     }
 
-    @GetMapping("/view/{id}")
-    public ApiResponse<User> getUserById(@PathVariable String id) {
-        return ApiResponse.success(userService.getUserById(id));
+    @GetMapping("/view/{username}")
+    public ApiResponse<User> getUserByUsername(@PathVariable String username) {
+        return ApiResponse.success(userService.getUserByUsername(username));
     }
 
-    @PutMapping("/update/{id}")
-    public ApiResponse<User> updateUser(@PathVariable String id, @RequestBody UpdateUserRequest request) {
-        return ApiResponse.success(userService.updateUser(id, request));
+    @PutMapping("/update/{username}")
+    public ApiResponse<User> updateUser(@PathVariable String username, @RequestBody UpdateUserRequest request) {
+        return ApiResponse.success(userService.updateUser(username, request));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ApiResponse<String> deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/delete/{username}")
+    public ApiResponse<String> deleteUser(@PathVariable String username) {
+        userService.deleteUser(username);
         return ApiResponse.success("User deleted");
     }
 }
