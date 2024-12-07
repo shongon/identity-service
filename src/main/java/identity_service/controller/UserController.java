@@ -5,6 +5,7 @@ import identity_service.dto.user.request.CreateUserRequest;
 import identity_service.dto.user.request.UpdateUserRequest;
 import identity_service.model.User;
 import identity_service.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ApiResponse<User> createUser(@RequestBody CreateUserRequest request) {
+    public ApiResponse<User> createUser(@RequestBody @Valid CreateUserRequest request) {
         return ApiResponse.success(userService.createUser(request));
     }
 
