@@ -2,13 +2,13 @@ spring:
   application:
     name: identity-service
   datasource:
-    url: "jdbc:mysql://127.0.0.1:3307/identity_service"
+    url: "jdbc:mysql://127.0.0.1:3307/identity_service" #MySQL running in Docker
     username: root
     password: 16102004
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: true # Show query statements in console (delete in real-project)
     open-in-view: off
 
 server:
