@@ -1,9 +1,7 @@
 package identity_service.exception.handler;
 
 import identity_service.dto.ApiResponse;
-import identity_service.exception.user.ExistedUsernameException;
-import identity_service.exception.user.UserNotFoundException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import identity_service.exception.ApplicationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,11 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    // Handler customer exceptions
+    // Handler custom exceptions
     @ExceptionHandler({
-            //User
-            UserNotFoundException.class,
-            ExistedUsernameException.class
+            ApplicationException.class
     })
     ResponseEntity<ApiResponse<?>> handleCustomExceptions(RuntimeException ex) {
         if (ex instanceof BaseCustomException customEx) {
@@ -25,13 +21,17 @@ public class GlobalExceptionHandler {
         }
 
         // Handle unexpected exceptions gracefully
-        return ResponseEntity.status(500)
+        return ResponseEntity.internalServerError()
                 .body(ApiResponse.error(500, "Internal Server Error: " + ex.getMessage()));
     }
 
     // Handler validation exception
     @ExceptionHandler (value = MethodArgumentNotValidException.class)
-    ResponseEntity<String> handlingValidation(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(ex.getFieldError().getDefaultMessage());
+    ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException ex) {
+        String enumKey = ex.getBindingResult().getFieldError().getDefaultMessage();
+        ErrorCode errorCode = ErrorCode.valueOf(enumKey);
+
+
+        return ResponseEntity.badRequest().body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage()));
     }
 }

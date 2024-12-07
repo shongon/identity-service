@@ -1,19 +1,20 @@
 package identity_service.exception.handler;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public enum ErrorCode {
     //User
     USER_NOT_FOUND(400,"User not found!"),
     EXISTED_USERNAME(400,"Username already exists!"),
+    INVALID_USERNAME(400,"Username must be at least 3 characters."),
+    INVALID_PASSWORD(400,"Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."),
+    INVALID_AGE(400,"User must be at least 18 years old."),
     ;
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 }

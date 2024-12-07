@@ -19,12 +19,11 @@ import java.time.LocalDate;
 public class CreateUserRequest {
 
     @NotNull
-    @Size(min = 3, message = "Username must be at least 3 characters")
+    @Size(min = 3, message = "INVALID_USERNAME")
     String username;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#^])[a-zA-Z\\d@$!%*?&#^\\s]{8,}$",
-            message = "Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, one digit, and one special character.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#^])[a-zA-Z\\d@$!%*?&#^\\s]{8,}$", message = "INVALID_PASSWORD")
     String password;
 
     @NotNull
@@ -34,6 +33,6 @@ public class CreateUserRequest {
     String lastName;
 
     @NotNull
-    @MinimumAge(value = 18, message = "User must be at least 18 years old")
+    @MinimumAge(value = 18, message = "INVALID_AGE")
     LocalDate dob;
 }

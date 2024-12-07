@@ -19,7 +19,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ApiResponse<User> createUser(@RequestBody @Valid CreateUserRequest request) {
-        return ApiResponse.success(userService.createUser(request));
+        return ApiResponse.success("User created!",userService.createUser(request));
     }
 
     @GetMapping("/view-all")
@@ -33,13 +33,13 @@ public class UserController {
     }
 
     @PutMapping("/update/{username}")
-    public ApiResponse<User> updateUser(@PathVariable String username, @RequestBody UpdateUserRequest request) {
-        return ApiResponse.success(userService.updateUser(username, request));
+    public ApiResponse<User> updateUser(@PathVariable String username, @RequestBody @Valid UpdateUserRequest request) {
+        return ApiResponse.success("User updated!", userService.updateUser(username, request));
     }
 
     @DeleteMapping("/delete/{username}")
     public ApiResponse<String> deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
-        return ApiResponse.success("User deleted");
+        return ApiResponse.success("User deleted!",null);
     }
 }

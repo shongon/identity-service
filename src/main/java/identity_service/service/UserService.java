@@ -3,17 +3,17 @@ package identity_service.service;
 import identity_service.dto.user.request.CreateUserRequest;
 import identity_service.dto.user.request.UpdateUserRequest;
 import identity_service.exception.handler.ErrorCode;
-import identity_service.exception.user.ExistedUsernameException;
-import identity_service.exception.user.UserNotFoundException;
+import identity_service.exception.ApplicationException;
 import identity_service.model.User;
 import identity_service.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
@@ -21,7 +21,7 @@ public class UserService {
         User user = new User();
 
         if (userRepository.existsByUsername(request.getUsername()))
-            throw new ExistedUsernameException(ErrorCode.EXISTED_USERNAME);
+            throw new ApplicationException(ErrorCode.EXISTED_USERNAME);
 
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
@@ -38,7 +38,7 @@ public class UserService {
 
     public User getUserByUsername(String username){
         if (!userRepository.existsByUsername(username))
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
 
         return userRepository.findByUsername(username);
     }
@@ -54,8 +54,8 @@ public class UserService {
     }
 
     public void deleteUser(String username){
-        if (!userRepository.existsByUsername(username))
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
-        userRepository.deleteByUsername(username);
+        User user = getUserByUsername(username);
+
+        userRepository.delete(user);
     }
 }

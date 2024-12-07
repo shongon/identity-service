@@ -1,15 +1,14 @@
-package identity_service.exception.user;
+package identity_service.exception;
 
 import identity_service.exception.handler.BaseCustomException;
 import identity_service.exception.handler.ErrorCode;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class ExistedUsernameException extends RuntimeException implements BaseCustomException {
-    private ErrorCode errorCode;
-    public ExistedUsernameException(ErrorCode errorCode) {
+public class ApplicationException extends RuntimeException implements BaseCustomException {
+    private final ErrorCode errorCode;
+
+    public ApplicationException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

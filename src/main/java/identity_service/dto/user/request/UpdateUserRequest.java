@@ -24,6 +24,6 @@ public class UpdateUserRequest {
     String lastName;
 
     @NotNull
-    @MinimumAge(value = 18, message = "User must be at least 18 years old")
+    @MinimumAge(value = 18, message = "INVALID_AGE")
     LocalDate dob;
 }
