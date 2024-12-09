@@ -10,6 +10,10 @@ spring:
       ddl-auto: update
     show-sql: true # Show query statements in console (delete in real-project)
     open-in-view: off
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC+7
 
 server:
   port: 8080
