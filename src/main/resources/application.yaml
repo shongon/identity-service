@@ -19,3 +19,8 @@ server:
   port: 8080
   servlet:
     context-path: /identity
+
+jwt:
+  secretKey: "xyVoO13eXsLr/M49zV1xqxKHadatS4EdfTvBLdrI1lW5PTOuqydmS8hF8EHHeCbn"
+
+
