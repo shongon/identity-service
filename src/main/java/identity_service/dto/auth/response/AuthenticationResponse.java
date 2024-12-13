@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationResponse {
+    String token;
+
     @JsonFormat(pattern = "HH:mm:ss' | 'dd-MM-yyyy")
     LocalDateTime loginTime;
 }

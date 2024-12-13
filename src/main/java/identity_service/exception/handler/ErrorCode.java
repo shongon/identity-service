@@ -14,6 +14,8 @@ public enum ErrorCode {
     INVALID_USERNAME(400,"Username must be at least 3 characters."),
     INVALID_PASSWORD(400,"Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."),
     INVALID_AGE(400,"User must be at least 18 years old."),
+    UNAUTHENTICATED(400,"Username or password is incorrect."),
+    UNVERIFIED(400, "Invalid Token."),
     ;
 
     private final int code;
