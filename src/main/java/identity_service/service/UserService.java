@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +51,8 @@ public class UserService {
             throw new ApplicationException(ErrorCode.EXISTED_USERNAME);
 
         User user = userMapper.toCreateUser(request);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userMapper.toCreateUserResponse(userRepository.save(user));
     }
@@ -62,6 +66,4 @@ public class UserService {
 
         return userMapper.toUpdateUserResponse(userRepository.save(user));
     }
-
-
 }

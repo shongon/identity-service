@@ -5,6 +5,7 @@ import lombok.*;
 
 
 @Getter
+@Builder
 @RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL) // Ignore null fields when return response
 public class ApiResponse <T> {
