@@ -20,6 +20,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+
     // Admin API controller
     @GetMapping("/view-all")
     public ApiResponse<List<User>> viewAllUsers() {
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     // User API controller
-    @PostMapping("/create")
+    @PostMapping("/register")
     public ApiResponse<CreateUserResponse> createUser(@RequestBody @Valid CreateUserRequest request) {
         return ApiResponse.success("User created!",userService.createUser(request));
     }
