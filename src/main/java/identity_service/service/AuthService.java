@@ -58,28 +58,31 @@ public class AuthService {
     }
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
-        var token = request.getToken();
+        String token = request.getToken();
 
+        // Sử dụng secret key để xác minh token
         JWSVerifier  verifier = new MACVerifier(SECRET_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
+        // Trích xuất thời gian hết hạn từ token
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        // Return verify with type boolean
-        var verified = signedJWT.verify(verifier);
+        boolean verified = signedJWT.verify(verifier); // Kiểm tra chữ ký token
 
+        // Ném ngoại lệ nếu token không hợp lệ
         if (!verified)
             throw  new ApplicationException(ErrorCode.UNVERIFIED);
 
         return IntrospectResponse.builder()
-                .valid(expiryTime.after(new Date()))
-                .validTime(LocalDateTime.now())
+                .valid(expiryTime.after(new Date())) // validate token is expired
+                .validTime(LocalDateTime.now()) // record validate time
                 .build();
     }
 
     // Generate JWT token
     private String generateToken(String username) {
+        // Determines the token encryption and signing method
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         // Create body contain key values
@@ -88,7 +91,7 @@ public class AuthService {
                 .issuer("shongon.com") // specific who this issuance was published by, usually is domain name
                 .issueTime(new Date()) // Issuance date - Ngày phát hành
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli() // expire after 1 hour
+                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli() // expires after 1 hour
                 ))
                 .build();
 
