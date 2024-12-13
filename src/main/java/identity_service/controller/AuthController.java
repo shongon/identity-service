@@ -24,14 +24,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        var result = authService.authenticate(authenticationRequest);
-        return ApiResponse.success("Login successfully!",result);
+        return ApiResponse.success("Login successfully!",authService.authenticate(authenticationRequest));
     }
 
     // Valid token return
     @PostMapping("/introspect")
     public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest introspectRequest) throws ParseException, JOSEException {
-        var validation = authService.introspect(introspectRequest);
-        return ApiResponse.success("Introspect successfully!",validation);
+        return ApiResponse.success("Introspect successfully!",authService.introspect(introspectRequest));
     }
 }
