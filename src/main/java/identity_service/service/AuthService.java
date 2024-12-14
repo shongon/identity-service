@@ -11,6 +11,7 @@ import identity_service.dto.auth.response.AuthenticationResponse;
 import identity_service.dto.auth.response.IntrospectResponse;
 import identity_service.exception.ApplicationException;
 import identity_service.exception.handler.ErrorCode;
+import identity_service.model.User;
 import identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +19,17 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 @Slf4j
 @Service
@@ -34,7 +37,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
     UserRepository userRepository;
-
+    PasswordEncoder passwordEncoder;
     @NonFinal
     @Value("${jwt.secretKey}")
     protected String SECRET_KEY;
@@ -43,13 +46,12 @@ public class AuthService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated =  passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if(!authenticated)
             throw new ApplicationException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(request.getUsername());
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(token)
@@ -81,15 +83,16 @@ public class AuthService {
     }
 
     // Generate JWT token
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         // Determines the token encryption and signing method
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         // Create body contain key values
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username) // represent for user already login
+                .subject(user.getUsername()) // represent for user already login
                 .issuer("shongon.com") // specific who this issuance was published by, usually is domain name
                 .issueTime(new Date()) // Issuance date - Ngày phát hành
+                .claim("role", user.getRoles().name()) // Role
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli() // expires after 1 hour
                 ))
@@ -109,6 +112,4 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
-
-
 }
