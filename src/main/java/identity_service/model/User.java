@@ -2,10 +2,7 @@ package identity_service.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,8 +13,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -40,10 +40,14 @@ public class User {
     @Column(name = "dob", nullable = false)
     LocalDate dob;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "roles", length = 50)
+    Role roles;
+
     // Thời gian tạo người dùng
     @CreatedDate
     @JsonFormat(pattern = "HH:mm:ss' | 'dd-MM-yyyy")
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 
     // Thời gian cập nhật cuối cùng
@@ -51,4 +55,9 @@ public class User {
     @JsonFormat(pattern = "HH:mm:ss' | 'dd-MM-yyyy")
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+
+    public enum Role{
+        ADMIN,
+        USER
+    }
 }
