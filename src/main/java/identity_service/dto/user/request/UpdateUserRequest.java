@@ -1,5 +1,7 @@
 package identity_service.dto.user.request;
 
+
+import identity_service.model.User;
 import identity_service.utils.CustomAnnotation.MininumAge.MinimumAge;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -25,6 +27,8 @@ public class UpdateUserRequest {
     @NotNull
     @MinimumAge(value = 18, message = "INVALID_AGE")
     LocalDate dob;
+
+    User.Role roles;
 
     LocalDateTime updatedAt;
 }

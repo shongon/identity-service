@@ -7,17 +7,16 @@ import identity_service.dto.user.response.UpdateUserResponse;
 import identity_service.dto.user.response.ViewUserResponse;
 import identity_service.exception.handler.ErrorCode;
 import identity_service.exception.ApplicationException;
-import identity_service.mapper.UserMapper;
 import identity_service.model.User;
 import identity_service.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,7 +24,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
     UserRepository userRepository;
-    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     // Admin services
     public List<User> getAllUsers(){
@@ -41,8 +40,18 @@ public class UserService {
 
     // User services
     public ViewUserResponse getUserByUsername(String username){
-        return userMapper.toViewUserResponse(userRepository.findByUsername(username)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND)));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+       return ViewUserResponse.builder()
+               .username(user.getUsername())
+               .firstName(user.getFirstName())
+               .lastName(user.getLastName())
+               .dob(user.getDob())
+               .roles(user.getRoles())
+               .createdAt(user.getCreatedAt())
+               .updatedAt(user.getUpdatedAt())
+               .build();
     }
 
     @Transactional
@@ -50,11 +59,20 @@ public class UserService {
         if (userRepository.existsByUsername(request.getUsername()))
             throw new ApplicationException(ErrorCode.EXISTED_USERNAME);
 
-        User user = userMapper.toCreateUser(request);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setDob(request.getDob());
+        user.setRoles(User.Role.USER);
+        user.setCreatedAt(LocalDateTime.now());
 
-        return userMapper.toCreateUserResponse(userRepository.save(user));
+        userRepository.save(user);
+
+        return CreateUserResponse.builder()
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 
     @Transactional
@@ -62,8 +80,15 @@ public class UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        userMapper.updateUser(user, request);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setDob(request.getDob());
+        user.setRoles(User.Role.valueOf(request.getRoles().toString().toUpperCase()));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
 
-        return userMapper.toUpdateUserResponse(userRepository.save(user));
+        return UpdateUserResponse.builder()
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 }

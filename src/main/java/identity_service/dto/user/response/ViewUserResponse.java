@@ -1,12 +1,13 @@
 package identity_service.dto.user.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import identity_service.model.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Data
 @Builder
@@ -16,14 +17,13 @@ import java.time.LocalDateTime;
 public class ViewUserResponse {
     String username;
 
-    @JsonIgnore
-    String password;
-
     String firstName;
 
     String lastName;
 
     LocalDate dob;
+
+    User.Role roles;
 
     @JsonFormat(pattern = "HH:mm:ss' | 'dd-MM-yyyy")
     LocalDateTime createdAt;

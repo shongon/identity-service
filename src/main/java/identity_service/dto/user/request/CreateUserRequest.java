@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -26,13 +27,10 @@ public class CreateUserRequest {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#^])[a-zA-Z\\d@$!_%*?&#^\\s]{8,}$", message = "INVALID_PASSWORD")
     String password;
 
-    @NotNull
     String firstName;
 
-    @NotNull
     String lastName;
 
-    @NotNull
     @MinimumAge(value = 18, message = "INVALID_AGE")
     LocalDate dob;
 
