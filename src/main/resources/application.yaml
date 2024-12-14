@@ -8,7 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true # Show query statements in console (delete in real-project)
+    show-sql: false # Show query statements in console (delete in real-project)
     open-in-view: off
     properties:
       hibernate:
