@@ -1,5 +1,6 @@
 package identity_service.config;
 
+import identity_service.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +37,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers("/users/view-all").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/users/delete/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/users/view-all","/users/delete/**").hasRole(User.Role.ADMIN.name())
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwtConfigurer ->
