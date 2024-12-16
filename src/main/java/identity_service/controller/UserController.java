@@ -22,6 +22,10 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/myInfo")
+    public ApiResponse<ViewUserResponse> getMyInfo(){
+        return ApiResponse.success(userService.getMyInfo());
+    }
 
     // Admin API controller
     @GetMapping("/view-all")
