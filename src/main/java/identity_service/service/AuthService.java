@@ -83,7 +83,6 @@ public class AuthService {
     private String generateToken(User user) {
         // Determines the token encryption and signing method
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
-
         // Create body contain key values
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername()) // represent for user already login
